@@ -159,9 +159,9 @@ class Option {
 
     get optionText() {
         if (this._correctAnswer) {
-            return '<li class="list-group-item list-group-item-action list-group-item-success" id="optionId'+this._optionId+'" name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + "</li>";
+            return '<li class="list-group-item list-group-item-action list-group-item-success" id="optionId'+this._optionId+'" name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<span class="glyphicon" onclick="deleteOption(this._optionId)">&#xe020;</span></li>';
         } else {
-            return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + "</li>";
+            return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<span class="glyphicon">&#xe020;</span></li>';
         }
     }
 }

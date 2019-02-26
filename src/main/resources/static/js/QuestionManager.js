@@ -52,3 +52,7 @@ function deleteQuestion(questionId){
     alert(questionId);
     getData(window.sessionStorage.getItem('quizId'));
 }
+
+function deleteOption(optionId){
+    alert('TO DELETE OPTION + ' + optionId)
+}
