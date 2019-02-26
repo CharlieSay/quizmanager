@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>WebbiSkools</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/quizPage.css">
+</head>
+<body onload="getQuizList(),userNameCheck(window)" >
+<div id="wrapper fadeInDown" style="alignment: center" class="container" hidden>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col">
+            <h1>WebbiSkools</h1>
+            </div>
+            <div class="col">
+            </div>
+            <div class="col" id="logoutButton">
+            <button type="button"  class="btn btn-primary" onclick="logOut()">Log Out</button>
+            </div>
+        </div>
+    </div>
+    <div id="formContent">
+        <div id="quiz_list" class="card"> </div>
+        <div id="question_list" class="card" hidden>
+            <div class="container" id="questionContentPanel">
+                <button type="button" class="btn btn-primary"  onclick="getQuizList()">Back</button>
+                <div class="row">
+                    <div class="col">
+                        <h5>Title</h5>
+                    </div>
+                    <div class="col">
+                        <h5>Creation Date</h5>
+                    </div>
+                    <div class="col">
+                        <h5> Number of Questions</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" id="titleText">
+                        <h6></h6>
+                    </div>
+                    <div class="col" id="creationText">
+                        <h6></h6>
+                    </div>
+                    <div class="col" id="amountofquestionsText">
+                        <h6></h6>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="card-body">
+                    <div class="row" id="description_row">
+                        <div class="col">
+                            <p id="descText"></p>
+                        </div>
+                        <div class="col">
+                            <button type=button id="editButton" class="btn btn-light" onclick="options()" disabled>Edit Answers</button>
+                        </div>
+                        <div class="col">
+                            <button type=button id="answerButton" class="btn btn-light" onclick="options()" disabled>Show Answers</button>
+                        </div>
+                    </div>
+                    <div id="listofquestionsText"> </div>
+                    <form>
+                        <div class="form-group" id="newQuestionForm" hidden>
+                            <label>Question Title</label>
+                            <input type="text" class="form-control" id="questionTitle" placeholder="Quiz Title">
+                            <label>Options</label>
+                            <input type="text" class="form-control" id="Option1" placeholder="Option 1">
+                            <input type="text" class="form-control" id="Option2" placeholder="Option 2">
+                            <input type="text" class="form-control" id="Option3" placeholder="Option 3">
+                            <input type="text" class="form-control" id="Option4" placeholder="Option 4">
+                            <input type="text" class="form-control" id="Option5" placeholder="Option 5">
+                        </div>
+                    </form>
+                    <button type="button" class="btn btn-primary" id="newQuestionButton" onclick="addNewQuestion()"style="alignment: center;">+ Add New Question</button>
+                    <button type="button" class="btn btn-primary" id="submitNewQuestion" onclick="submitNewQuestion()"style="alignment: center;" hidden>Submit</button>
+                </div>
+            </div>
+        </div>
+</div>
+    <div id="create_new" class="card" style="padding-top: 50px"hidden>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('new_quiz_form').hidden = false  ">Add New Quiz</button>
+        <form id="new_quiz_form" hidden>
+            <div class="form-group">
+                <label>Quiz Title</label>
+                <input type="text" class="form-control" id="quiz_title" placeholder="Quiz Title">
+                <label>Description</label>
+                <input type="text" class="form-control" id="quiz_description" placeholder="Description">
+            </div>
+        </form>
+    </div></div>
+</div>
+<script src="js/quizDataRetrieval.js"></script>
+<script src="js/quizPageSetup.js"></script>
+<script src="js/quizListRetrieval.js"></script>
+<script src="js/addNewQuestions.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
