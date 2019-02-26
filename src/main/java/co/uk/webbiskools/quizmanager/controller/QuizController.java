@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/quiz")
@@ -43,6 +40,14 @@ public class QuizController {
             @RequestParam String option3, @RequestParam(required = false) String option4,
             @RequestParam(required = false) String option5, @RequestParam String quizId) {
         if (quizService.addNewQuestion(question, quizId, option1, option2, option3, option4, option5)) {
+            return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        }
+        return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping(value = "/question/delete")
+    public ResponseEntity<HttpStatus> deleteQuestion(@RequestParam String questionId){
+        if (quizService.deleteQuestion(questionId)){
             return ResponseEntity.ok(HttpStatus.ACCEPTED);
         }
         return ResponseEntity.ok(HttpStatus.BAD_REQUEST);

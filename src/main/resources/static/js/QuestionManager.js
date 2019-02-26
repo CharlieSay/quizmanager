@@ -43,3 +43,12 @@ function submitNewQuestion() {
     document.getElementById('Option5').value = '';
     getData(window.sessionStorage.getItem('quizId'));
 }
+
+function deleteQuestion(questionId){
+    let url = 'http://localhost:8080/quiz/question/delete?questionId='+questionId;
+    fetch(url,{ method: "DELETE" }).then(response => {
+        console.log(response);
+    });
+    alert(questionId);
+    getData(window.sessionStorage.getItem('quizId'));
+}

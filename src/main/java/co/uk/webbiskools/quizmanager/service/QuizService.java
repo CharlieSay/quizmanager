@@ -21,6 +21,18 @@ public class QuizService {
         this.connection = connection;
     }
 
+    public Boolean deleteQuestion(String questionId){
+        String SQLStatement = "DELETE FROM QuestionBank WHERE id = (?);";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLStatement);
+            preparedStatement.setString(1,questionId);
+            return preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public Boolean addNewQuestion(String question, String quizId, String... options){
         String SQLStatement = "INSERT INTO QuestionBank(question_text, quiz_id) VALUES (?,?)";
         try{

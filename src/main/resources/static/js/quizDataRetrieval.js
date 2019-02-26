@@ -5,7 +5,7 @@ function getData(quizId) {
             if (response.ok) {
                 response.json().then(body => {
                     loadJsonData(body)
-                    window.sessionStorage.setItem('quizId',quizId);
+                    window.sessionStorage.setItem('quizId', quizId);
                 })
             } else {
                 alert('Issue With Retrieving QuizDataRetrieval. Most Likely doesnt exist.');
@@ -57,8 +57,16 @@ function populateQuestions(quiz) {
     let length = quiz._questionList.length;
     let requiredHTML = ' <ul class="list-group">';
     for (let i = 0; i < length; i++) {
-        let questionHTML = '<li class="list-group-item"><h4>Question ' +
-            (i + 1) + '</h4>' + quiz._questionList[i].questionText + '</li>'
+        let questionHTML = '';
+        if (window.sessionStorage.getItem('group') == 1) {
+            questionHTML = '<div class="row" id="questionId' + quiz._questionList[i].questionId + '"><div class="col"><li class="list-group-item"><h4>Question ' +
+                (i + 1) + '</h4>' + quiz._questionList[i].questionText +
+                '</div> <div class="row"><button class="btn btn-link" onclick="deleteQuestion('+quiz._questionList[i].questionId+')">DELETE</button></div></li></div>'
+        } else {
+            questionHTML = '<div class="row"><div class="col"<li class="list-group-item"><h4>Question ' +
+                (i + 1) + '</h4>' + quiz._questionList[i].questionText +
+                '</div> <div class="row"></div></li></div>'
+        }
         requiredHTML += questionHTML;
         requiredHTML += populateOptions(quiz._questionList[i]);
     }
@@ -79,7 +87,7 @@ class QuizDataRetrieval {
 
         let array = [];
         for (let i = 0; i < questionList.length; i++) {
-            array.push(new Question(questionList[i].questionText, questionList[i].optionList))
+            array.push(new Question(questionList[i].questionText, questionList[i].optionList,questionList[i].id))
         }
 
         this._questionList = array;
@@ -116,13 +124,15 @@ class QuizDataRetrieval {
 
 class Question {
 
-    constructor(questionText, optionList) {
+    constructor(questionText, optionList,questionId) {
         this._questionText = questionText;
+        this._questionId = questionText;
         let array = [];
         for (let i = 0; i < optionList.length; i++) {
             array.push(new Option(optionList[i].optionText, i, optionList[i].correct));
         }
         this._optionList = array;
+        this._questionId = questionId;
     }
 
     get questionText() {
@@ -132,19 +142,24 @@ class Question {
     get optionList() {
         return this._optionList;
     }
+
+    get questionId() {
+        return this._questionId;
+    }
 }
 
 class Option {
-    constructor(optionText, optionNumber, correctAnswer) {
+    constructor(optionText, optionNumber, correctAnswer, optionId) {
         this._optionText = optionText;
         this._optionNumber = optionNumber;
         this._correctAnswer = correctAnswer;
+        this._optionId = optionId;
     }
 
 
     get optionText() {
         if (this._correctAnswer) {
-            return '<li class="list-group-item list-group-item-action list-group-item-success"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + "</li>";
+            return '<li class="list-group-item list-group-item-action list-group-item-success" id="optionId'+this._optionId+'" name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + "</li>";
         } else {
             return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + "</li>";
         }
