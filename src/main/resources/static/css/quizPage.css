@@ -14,6 +14,14 @@
     margin: auto;
 }
 
+#userIdentifier{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    alignment: center;
+    font-style: italic;
+}
+
 #questionContentPanel{
     padding-top: 30px;
 }
@@ -29,28 +37,69 @@
     transition: color 0.2s ease-in-out;
 }
 
+#quiz_list>ul>div>li>div>h4:hover{
+    color: #007bff;
+    cursor: pointer;
+    background-position: 100% 100%;
+    transition: color 0.2s ease-in-out;
+}
+
 #description_row{
     padding-bottom: 25px;
+}
+
+#logoutButton{
+    alignment: right;
 }
 
 .jumbotron{
     white-space: nowrap;
 }
 
-#logoutButton{
-    alignment: right;
+.wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-height: 100%;
+    padding: 20px;
 }
-/*}#quiz_list>ul>li:hover{*/
-    /*color: #007bff;*/
-    /*cursor: pointer;*/
-    /*background-position: 100% 100%;*/
-    /*animation-name: up-bump;*/
-    /*animation-duration: 1s;*/
-    /*animation-iteration-count: infinite;*/
-/*}*/
 
-/*@keyframes up-bump {*/
-    /*0% { padding-top: 2em; padding-bottom: 2em}*/
-    /*50% { padding-top: 1.5em; padding-bottom: 1.5em}*/
-    /*100% { padding-top: 2em; padding-bottom: 2em}*/
-/*}*/
+/* ANIMATIONS */
+
+/* Simple CSS3 Fade-in-down Animation */
+.fadeInDown {
+    -webkit-animation-name: fadeInDown;
+    animation-name: fadeInDown;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: none;
+        transform: none;
+    }
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: none;
+        transform: none;
+    }
+}

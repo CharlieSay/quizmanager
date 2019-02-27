@@ -45,9 +45,25 @@ public class QuizController {
         return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
     }
 
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity<HttpStatus> deleteQuiz(@RequestParam String quizId){
+        if (quizService.deleteFrom("QuizBank",quizId)){
+            return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        }
+        return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+    }
+
     @DeleteMapping(value = "/question/delete")
     public ResponseEntity<HttpStatus> deleteQuestion(@RequestParam String questionId){
-        if (quizService.deleteQuestion(questionId)){
+        if (quizService.deleteFrom("QuestionBank",questionId)){
+            return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        }
+        return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping(value = "/question/option/delete")
+    public ResponseEntity<HttpStatus> deleteOption(@RequestParam String optionId){
+        if (quizService.deleteFrom("OptionBank",optionId)){
             return ResponseEntity.ok(HttpStatus.ACCEPTED);
         }
         return ResponseEntity.ok(HttpStatus.BAD_REQUEST);

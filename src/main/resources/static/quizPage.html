@@ -13,7 +13,7 @@
             <div class="col">
             <h1>WebbiSkools</h1>
             </div>
-            <div class="col">
+            <div class="col" id="userIdentifier">
             </div>
             <div class="col" id="logoutButton">
             <button type="button"  class="btn btn-primary" onclick="logOut()">Log Out</button>
@@ -55,10 +55,9 @@
                             <p id="descText"></p>
                         </div>
                         <div class="col">
-                            <button type=button id="editButton" class="btn btn-light" onclick="options()" disabled>Edit Answers</button>
                         </div>
                         <div class="col">
-                            <button type=button id="answerButton" class="btn btn-light" onclick="options()" disabled>Show Answers</button>
+                            <button type=button id="answerButton" class="btn btn-light" onclick="editableView()" hidden>Editable View</button>
                         </div>
                     </div>
                     <div id="listofquestionsText"> </div>
@@ -67,20 +66,33 @@
                             <label>Question Title</label>
                             <input type="text" class="form-control" id="questionTitle" placeholder="Quiz Title">
                             <label>Options</label>
-                            <input type="text" class="form-control" id="Option1" placeholder="Option 1">
-                            <input type="text" class="form-control" id="Option2" placeholder="Option 2">
-                            <input type="text" class="form-control" id="Option3" placeholder="Option 3">
-                            <input type="text" class="form-control" id="Option4" placeholder="Option 4">
-                            <input type="text" class="form-control" id="Option5" placeholder="Option 5">
+                            <div id="option1">
+                                <input type="text" class="form-control" id="Option1Input" placeholder="Option 1">
+                            </div>
+                            <div id="option2">
+                                <input type="text" class="form-control" id="Option2Input" placeholder="Option 2">
+                            </div>
+                            <div id="option3">
+                                <input type="text" class="form-control" id="Option3Input" placeholder="Option 3">
+                            </div>
+                            <div id="option4">
+                                <input type="text" class="form-control" id="Option4Input" placeholder="Option 4">
+                            </div>
+                            <div id="option5">
+                                <input type="text" class="form-control" id="Option5Input" placeholder="Option 5">
+                            </div>
                         </div>
                     </form>
                     <button type="button" class="btn btn-primary" id="newQuestionButton" onclick="addNewQuestion()"style="alignment: center;">+ Add New Question</button>
+                   <span>
                     <button type="button" class="btn btn-primary" id="submitNewQuestion" onclick="submitNewQuestion()"style="alignment: center;" hidden>Submit</button>
+                    <button type="button" class="btn btn-primary" id="hideNewQuestion" onclick="hideNewQuestion()"style="alignment: center;" hidden>Hide New Question</button>
+                    </span>
                 </div>
             </div>
         </div>
 </div>
-    <div id="create_new" class="card" style="padding-top: 50px"hidden>
+    <div id="create_new" class="card" style="padding-top: 50px" hidden>
         <button type="button" class="btn btn-primary" onclick="document.getElementById('new_quiz_form').hidden = false  ">Add New Quiz</button>
         <form id="new_quiz_form" hidden>
             <div class="form-group">

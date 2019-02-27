@@ -4,7 +4,7 @@ function getData(quizId) {
         .then(response => {
             if (response.ok) {
                 response.json().then(body => {
-                    loadJsonData(body)
+                    loadJsonData(body);
                     window.sessionStorage.setItem('quizId', quizId);
                 })
             } else {
@@ -15,7 +15,7 @@ function getData(quizId) {
 
 function loadJsonData(body) {
     let jsonObject = body;
-    let newQuiz = new QuizDataRetrieval(jsonObject.id, jsonObject.title, jsonObject.description, jsonObject.creationDate, jsonObject.creatorId, jsonObject.amountOfQuestions, jsonObject.questionList)
+    let newQuiz = new QuizDataRetrieval(jsonObject.id, jsonObject.title, jsonObject.description, jsonObject.creationDate, jsonObject.creatorId, jsonObject.amountOfQuestions, jsonObject.questionList);
     document.getElementById('titleText').innerText = newQuiz.title;
     document.getElementById('descText').innerText = newQuiz.description;
     document.getElementById('creationText').innerText = newQuiz.creationDate;
@@ -23,37 +23,42 @@ function loadJsonData(body) {
     populateQuestions(newQuiz);
     document.getElementById('question_list').hidden = false;
     document.getElementById('quiz_list').hidden = true;
+    // optionVerifier(false);
 }
 
 function populateOptions(question) {
     let amountOfQuestions = question.optionList.length;
-    let requiredOptions = ' <ul class="list-group" name="option" hidden>';
+    let requiredOptions = ' <ul class="list-group" name="option">';
     for (let i = 0; i < amountOfQuestions; i++) {
-        console.log(question.optionList[i].optionText);
         requiredOptions += question.optionList[i].optionText;
     }
     requiredOptions += '</ul>';
     return requiredOptions;
 }
 
-function optionVerifier(boolean) {
-    let elementsByName = document.getElementsByName('option');
-    for (let x = 0; x < elementsByName.length; x++) {
-        let item = elementsByName[x];
-        item.hidden = boolean;
-    }
+function editableView(){
+    populateQuestions();
 }
 
-function options() {
-    if (document.getElementsByName('option')[0].hidden.valueOf()) {
-        optionVerifier(false);
-    } else {
-        optionVerifier(true);
-    }
-}
+//
+// function optionVerifier(boolean) {
+//     let elementsByName = document.getElementsByName('option');
+//     for (let x = 0; x < elementsByName.length; x++) {
+//         let item = elementsByName[x];
+//         item.hidden = boolean;
+//     }
+// }
+//
+// function options() {
+//     if (document.getElementsByName('option')[0].hidden.valueOf()) {
+//         optionVerifier(false);
+//     } else {
+//         optionVerifier(true);
+//     }
+// }
 
 
-function populateQuestions(quiz) {
+function populateQuestions(quiz,groupId) {
     let length = quiz._questionList.length;
     let requiredHTML = ' <ul class="list-group">';
     for (let i = 0; i < length; i++) {
@@ -71,7 +76,7 @@ function populateQuestions(quiz) {
         requiredHTML += populateOptions(quiz._questionList[i]);
     }
 
-    requiredHTML += '</ul>'
+    requiredHTML += '</ul>';
     document.getElementById('listofquestionsText').innerHTML = requiredHTML;
 }
 
@@ -129,7 +134,7 @@ class Question {
         this._questionId = questionText;
         let array = [];
         for (let i = 0; i < optionList.length; i++) {
-            array.push(new Option(optionList[i].optionText, i, optionList[i].correct));
+            array.push(new Option(optionList[i].optionText, i, optionList[i].correct, optionList[i].id));
         }
         this._optionList = array;
         this._questionId = questionId;
@@ -158,11 +163,22 @@ class Option {
 
 
     get optionText() {
-        if (this._correctAnswer) {
-            return '<li class="list-group-item list-group-item-action list-group-item-success" id="optionId'+this._optionId+'" name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<span class="glyphicon" onclick="deleteOption(this._optionId)">&#xe020;</span></li>';
-        } else {
-            return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<span class="glyphicon">&#xe020;</span></li>';
+        if (window.sessionStorage.getItem('group') == 1){
+            if (this._correctAnswer) {
+                return '<li class="list-group-item list-group-item-action list-group-item-success" id="optionId'+this._optionId+'" name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<button class="btn btn-link" onclick="deleteOption('+this._optionId+')">Delete Option</button></li>';
+            } else {
+                return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<button class="btn btn-link" onclick="deleteOption('+this._optionId+')">Delete Option</button></li>';
+            }
+        }else if(window.sessionStorage.getItem('group')==2){
+            if (this._correctAnswer) {
+                return '<li class="list-group-item list-group-item-action list-group-item-success" name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '</li>';
+            } else {
+                return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '</li>';
+            }
+        }else{
+            return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '</li>';
         }
+
     }
 }
 

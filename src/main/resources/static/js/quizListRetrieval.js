@@ -1,5 +1,4 @@
 function getQuizList() {
-    window.sessionStorage.removeItem('quizId');
     let url = 'http://localhost:8080/quiz/get/all';
     fetch(url)
         .then(response => {
@@ -7,17 +6,21 @@ function getQuizList() {
                 response.json().then(body => {
                     parseQuizList(body);
                 })
-            } else {
-
             }
         })
 }
 
 function parseQuizList(body) {
     document.getElementById('quiz_list').innerHTML = '';
-    let startingHTML = '<ul class="list-group">'
+    let startingHTML = '<ul class="list-group">';
     for (let x = 0; x < body.length; x++) {
-        startingHTML += '<li class="list-group-item" onclick="getData(' + body[x].id + ')" id=' + body[x].id + '><h4>' + body[x].title + '</h4></li>'
+        if (window.sessionStorage.getItem('group')==1){
+            startingHTML += '<div class="row" style="display:inline-block">' +
+                '<li class="list-group-item"><div class="col"><h4 onclick="getData(' + body[x].id + ')" id=' + body[x].id + '>' + body[x].title + '</h4></div><div class="col"><button type="button" onclick="deleteQuiz('+body[x].id+')"class="btn btn-link">Delete Quiz</button></div></li>' +
+                '</div>'
+        }else{
+            startingHTML += '<li class="list-group-item" onclick="getData(' + body[x].id + ')" id=' + body[x].id + '><h4>' + body[x].title + '</h4></li>'
+        }
     }
     startingHTML += '</ul>'
     document.getElementById('quiz_list').innerHTML = startingHTML;

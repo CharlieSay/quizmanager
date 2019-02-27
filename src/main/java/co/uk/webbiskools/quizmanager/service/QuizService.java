@@ -21,11 +21,11 @@ public class QuizService {
         this.connection = connection;
     }
 
-    public Boolean deleteQuestion(String questionId){
-        String SQLStatement = "DELETE FROM QuestionBank WHERE id = (?);";
+    public Boolean deleteFrom(String typeBank, String id) {
+        String SQLStatement = "DELETE FROM " + typeBank + " WHERE id = (?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SQLStatement);
-            preparedStatement.setString(1,questionId);
+            preparedStatement.setString(1,id);
             return preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
