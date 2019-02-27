@@ -20,15 +20,8 @@ function addNewQuiz(){
         'title=' + title +
         '&description=' + description+
         '&userId=' + window.sessionStorage.getItem('uid');
-    fetch(url, {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        method: "POST"
-    }) .then(response => {
-        console.log(response);
-    });
+
+    postRequest(url);
     alert('new quiz added');
     document.getElementById('new_quiz_form').hidden = true;
     document.getElementById('new_quiz_title').value = '';
@@ -52,16 +45,7 @@ function submitNewQuestion() {
         '&option4=' + option4 +
         '&option5=' + option5 +
         '&quizId=' + window.sessionStorage.getItem('quizId');
-    fetch(url, {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        method: "POST"
-    })
-        .then(response => {
-           console.log(response);
-        });
+    postRequest(url);
 
     document.getElementById('newQuestionForm').hidden = true;
     document.getElementById('newQuestionButton').hidden = false;
@@ -81,16 +65,7 @@ function addOption(questionId){
     let url = 'http://localhost:8080/quiz/question/option/add?' +
             'questionId=' + questionId +
             '&optionText=' + questionText;
-    fetch(url, {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        method: "POST"
-    })
-        .then(response => {
-            console.log(response);
-        });
+    postRequest(url);
     alert('Option added');
     getData(window.sessionStorage.getItem('quizId'));
 }
@@ -101,27 +76,39 @@ function showAddNewOptionBox(questionId){
 
 function deleteQuestion(questionId){
     let url = 'http://localhost:8080/quiz/question/delete?questionId='+questionId;
-    fetch(url,{ method: "DELETE" }).then(response => {
-        console.log(response);
-    });
+    deleteOption(url);
     alert('Question Deleted');
     getData(window.sessionStorage.getItem('quizId'));
 }
 
 function deleteQuiz(quizId){
     let url = 'http://localhost:8080/quiz/delete?quizId='+quizId;
-    fetch(url,{ method: "DELETE" }).then(response => {
-        console.log(response);
-    });
+    deleteRequest(url);
     alert('Quiz Deleted');
     getQuizList();
 }
 
 function deleteOption(optionId){
     let url = 'http://localhost:8080/quiz/question/option/delete?optionId='+optionId;
-    fetch(url,{ method: "DELETE" }).then(response => {
-        console.log(response);
-    });
+    deleteRequest(url);
     alert('Option Deleted');
     getData(window.sessionStorage.getItem('quizId'));
+}
+
+function deleteRequest(url) {
+    fetch(url, {method: "DELETE"}).then(response => {
+        console.log(response);
+    });
+}
+
+function postRequest(url) {
+    fetch(url, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: "POST"
+    }).then(response => {
+        console.log(response);
+    });
 }

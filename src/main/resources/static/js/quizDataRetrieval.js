@@ -25,7 +25,6 @@ function loadJsonData(body) {
     populateQuestions(newQuiz);
     document.getElementById('question_list').hidden = false;
     document.getElementById('quiz_list').hidden = true;
-    // optionVerifier(false);
 }
 
 function populateOptions(question) {

@@ -24,9 +24,9 @@ public class QuizController {
     }
 
     @GetMapping(value = "/get/byId", params = "quizId", produces = "application/json")
-    public ResponseEntity <String> getQuizInfo(@RequestParam String quizId) {
-        Quiz quizById = quizService.getQuizById(Integer.parseInt(quizId));
-        return ResponseEntity.ok(gson.toJson(quizById));
+    public ResponseEntity <String> getQuizById(String quizId) {
+            Quiz quizById = quizService.getQuizById(Integer.valueOf(quizId));
+            return ResponseEntity.ok(gson.toJson(quizById));
     }
 
     @GetMapping(value = "/get/all")
