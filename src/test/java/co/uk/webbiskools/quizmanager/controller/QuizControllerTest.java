@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,24 +21,23 @@ public class QuizControllerTest {
 
     QuizService quizService;
 
-    Quiz quiz;
 
     @Before
     public void setUp(){
-        quiz = mock(Quiz.class);
         quizService = mock(QuizService.class);
         quizController = new QuizController(quizService);
     }
 
-//    @Test
-//    public void should_GetQuizById_IfQuizIdIsValid(){
-//        when(quizService.getQuizById(anyInt())).thenReturn(new Quiz(1,"Title"));
-//
-//        ResponseEntity<String> quizById = quizController.getQuizById("1");
-//
-//        verify(quizController.getQuizById(eq("1")));
-//        assertEquals(quizById.getStatusCode(),200);
-//    }
+    @Test
+    public void should_GetQuizById_WhenValidQuizId(){
+        Quiz quiz = new Quiz(1,"","", LocalDate.now(),1,1);
+        when(quizService.getQuizById(any())).thenReturn(quiz);
+
+        ResponseEntity<String> quizById = quizController.getQuizById("1");
+
+        assertEquals(200,quizById.getStatusCodeValue());
+        verify(quizService).getQuizById(any());
+    }
 
     @Test
     public void should_getAllQuizzes(){
@@ -50,25 +50,27 @@ public class QuizControllerTest {
 
         assertNotNull(allQuizzes);
     }
-
-    @Test
-    public void should_AddNewQuestion_ThenReturnOkResponseEntityWithHttpStatusAccepted(){
-        when(quizService.addNewQuestion(eq("correctQuestion"),any(),any(),any(),any(),any())).thenReturn(true);
-
-        ResponseEntity<HttpStatus> httpStatusResponseEntity = quizController.addNewQuestion("correctQuestion", "1", "option1", "option2", "option3",
-                "option4", "option5");
-
-        assertEquals(200,httpStatusResponseEntity.getStatusCodeValue());
-    }
+//
+//    @Test
+//    public void should_AddNewQuestion_ThenReturnOkResponseEntityWithHttpStatusAccepted(){
+//        when(quizService.addNewQuestion(any(),any(),any(),any(),any(),any())).thenReturn(true);
+//
+//        ResponseEntity<HttpStatus> httpStatusResponseEntity = quizController.addNewQuestion("correctQuestion", "1",
+//                "option1", "option2", "option3", "option4", "option5");
+//
+//        assertEquals(HttpStatus.ACCEPTED,httpStatusResponseEntity.getStatusCode());
+//    }
 
     @Test
     public void should_NotAddNewQuestion_WhenFalseReturnedFromService(){
-        when(quizService.addNewQuestion(any(),any(),any(),any(),any())).thenReturn(false);
+        when(quizService.addNewQuestion(any(),any(),any(),any(),any(),any(),any())).thenReturn(false);
 
-        ResponseEntity<HttpStatus> httpStatusResponseEntity = quizController.addNewQuestion("incorrectQuestion", "1", "option1", "option2", "option3",
-                "option4", "option5");
+        ResponseEntity<HttpStatus> httpStatusResponseEntity = quizController.addNewQuestion("incorrectQuestion",
+                "1", "option1", "option2", "option3", "option4", "option5");
 
+        verify(quizService).addNewQuestion(anyString(),anyString(),anyString(),anyString(),anyString(),anyString(),anyString());
         assertEquals(400,httpStatusResponseEntity.getStatusCodeValue());
+        assertEquals(HttpStatus.BAD_REQUEST,httpStatusResponseEntity.getStatusCode());
     }
 
 }

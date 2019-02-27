@@ -42,7 +42,7 @@ public class QuizController {
         if (quizService.addNewQuestion(question, quizId, option1, option2, option3, option4, option5)) {
             return ResponseEntity.ok(HttpStatus.ACCEPTED);
         }
-        return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping(value = "/add")

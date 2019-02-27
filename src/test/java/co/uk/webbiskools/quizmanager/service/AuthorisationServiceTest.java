@@ -46,7 +46,7 @@ public class AuthorisationServiceTest {
         verify(connection).prepareStatement(anyString());
         verify(preparedStatement).executeQuery();
         verify(resultSet).next();
-        verify(resultSet).getInt(anyString());
+        verify(resultSet,atMost(2)).getInt(anyString());
         assertThat(groupId.get(),is(1));
         assertThat(authorisationToken,is(AuthorisationToken.AUTHORISED));
     }
@@ -68,6 +68,16 @@ public class AuthorisationServiceTest {
         verify(resultSet).next();
         assertThat(groupId,is(Optional.empty()));
         assertThat(authorisationToken,is(AuthorisationToken.INCORRECT_CREDENETIALS));
+    }
+
+    @Test
+    public void should_ReturnEmptyAuthorisation_WhenSQLExceptionIsThrown() throws SQLException {
+        when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
+
+        Authorisation authorisation = authorisationService.authoriseUserLogin("SQLError", "SQLErrorPassword");
+        AuthorisationToken authorisationToken = authorisation.getAuthorisationToken();
+
+        assertEquals(AuthorisationToken.SERVICE_ERROR,authorisationToken);
     }
 
 }
