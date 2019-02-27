@@ -1,4 +1,6 @@
 function getData(quizId) {
+    document.getElementById('new_quiz_form').hidden = true;
+    document.getElementById('create_new').hidden = true;
     let url = 'http://localhost:8080/quiz/get/byId?quizId=' + quizId;
     fetch(url)
         .then(response => {
@@ -58,22 +60,36 @@ function editableView(){
 // }
 
 
-function populateQuestions(quiz,groupId) {
+function populateQuestions(quiz) {
     let length = quiz._questionList.length;
-    let requiredHTML = ' <ul class="list-group">';
+    let requiredHTML = ' <ul class="list-group" id="wholeQuestionList">';
     for (let i = 0; i < length; i++) {
-        let questionHTML = '';
+        let questionHTML = '<div id="questionId' + quiz._questionList[i].questionId + '">';
         if (window.sessionStorage.getItem('group') == 1) {
-            questionHTML = '<div class="row" id="questionId' + quiz._questionList[i].questionId + '"><div class="col"><li class="list-group-item"><h4>Question ' +
-                (i + 1) + '</h4>' + quiz._questionList[i].questionText +
-                '</div> <div class="row"><button class="btn btn-link" onclick="deleteQuestion('+quiz._questionList[i].questionId+')">DELETE</button></div></li></div>'
+            questionHTML +=
+                '<div class="row">' +
+                '<div class="col">' +
+                '<li class="list-group-item">' +
+                '<h4>Question ' + (i + 1) + '</h4>' + quiz._questionList[i].questionText +
+                '</div> ' +
+                '<div class="row">' +
+                '<button class="btn btn-link" onclick="deleteQuestion('+quiz._questionList[i].questionId+')">Delete</button>' +
+                '<button class="btn btn-link" onclick="showAddNewOptionBox('+quiz._questionList[i].questionId+')">Add New Option</button>' +
+                '</div>' +
+                '</li>' +
+                '</div>'
         } else {
-            questionHTML = '<div class="row"><div class="col"<li class="list-group-item"><h4>Question ' +
+            questionHTML += '<div class="row"><div class="col"<li class="list-group-item"><h4>Question ' +
                 (i + 1) + '</h4>' + quiz._questionList[i].questionText +
-                '</div> <div class="row"></div></li></div>'
+                '</div><div class="row"></div></li>'
         }
         requiredHTML += questionHTML;
         requiredHTML += populateOptions(quiz._questionList[i]);
+            requiredHTML += '<div class="form-group" id="newQuestionForm'+quiz._questionList[i].questionId+'" hidden>' +
+            '<label>Option</label><input type="text" class="form-control" id="newOptionBox'+quiz._questionList[i].questionId+'" placeholder="New Option">' +
+            '<button class="btn btn-primary" onclick="addOption('+quiz._questionList[i].questionId+')">Submit New Option</button>' +
+            '</div>';
+        requiredHTML += '</div>'
     }
 
     requiredHTML += '</ul>';

@@ -8,6 +8,7 @@ function authenticateUser(username, password) {
                         document.getElementById('success-panel').innerHTML = 'Welcome Back <h5>' + username.value + '</h5>';
                         document.getElementById('success-panel').hidden = false;
                         window.sessionStorage.setItem('un', username.value);
+                        window.sessionStorage.setItem('uid', parseInt(body.userId));
                         window.sessionStorage.setItem('group', parseInt(body.groupId));
                         window.setTimeout(function() {
                             window.location = './quizPage.html'

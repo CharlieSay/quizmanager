@@ -1,4 +1,6 @@
 function getQuizList() {
+    document.getElementById('create_new').hidden = false;
+    document.getElementById('new_quiz_form').hidden = true;
     let url = 'http://localhost:8080/quiz/get/all';
     fetch(url)
         .then(response => {

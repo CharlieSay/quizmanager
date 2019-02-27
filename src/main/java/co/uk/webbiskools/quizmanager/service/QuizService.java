@@ -33,6 +33,34 @@ public class QuizService {
         return false;
     }
 
+    public Boolean addNewOption(String questionId, String optionText){
+        String SQLStatement = "INSERT INTO OptionBank(option_text, question_id, correct_answer) VALUES (?,?,?)";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLStatement);
+            preparedStatement.setInt(2,Integer.parseInt(questionId));
+            preparedStatement.setString(1,optionText);
+            preparedStatement.setBoolean(3,false);
+            return preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Boolean addNewQuiz(String title, String description, String creatorId){
+        String SQLStatement = "INSERT INTO QuizBank (title, description, creation_date, creator_id) VALUES (?,?,CURRENT_DATE,?)";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLStatement);
+            preparedStatement.setString(1,title);
+            preparedStatement.setString(2,description);
+            preparedStatement.setInt(3,Integer.parseInt(creatorId));
+            return preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public Boolean addNewQuestion(String question, String quizId, String... options){
         String SQLStatement = "INSERT INTO QuestionBank(question_text, quiz_id) VALUES (?,?)";
         try{

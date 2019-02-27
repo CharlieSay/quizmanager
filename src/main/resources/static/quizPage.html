@@ -83,26 +83,27 @@
                             </div>
                         </div>
                     </form>
-                    <button type="button" class="btn btn-primary" id="newQuestionButton" onclick="addNewQuestion()"style="alignment: center;">+ Add New Question</button>
+                    <button type="button" class="btn btn-primary" id="newQuestionButton" onclick="unhideNewQuestionForm()" style="alignment: center;">+ Add New Question</button>
                    <span>
-                    <button type="button" class="btn btn-primary" id="submitNewQuestion" onclick="submitNewQuestion()"style="alignment: center;" hidden>Submit</button>
-                    <button type="button" class="btn btn-primary" id="hideNewQuestion" onclick="hideNewQuestion()"style="alignment: center;" hidden>Hide New Question</button>
+                    <button type="button" class="btn btn-primary" id="submitNewQuestion" onclick="submitNewQuestion()" style="alignment: center;" hidden>Submit</button>
+                    <button type="button" class="btn btn-primary" id="hideNewQuestion" onclick="hideNewQuestionForm()" style="alignment: center;" hidden>Hide New Question</button>
                     </span>
                 </div>
             </div>
         </div>
 </div>
     <div id="create_new" class="card" style="padding-top: 50px" hidden>
-        <button type="button" class="btn btn-primary" onclick="document.getElementById('new_quiz_form').hidden = false  ">Add New Quiz</button>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('new_quiz_form').hidden = false">Add New Quiz</button>
         <form id="new_quiz_form" hidden>
             <div class="form-group">
                 <label>Quiz Title</label>
-                <input type="text" class="form-control" id="quiz_title" placeholder="Quiz Title">
+                <input type="text" class="form-control" id="new_quiz_title" placeholder="Quiz Title">
                 <label>Description</label>
-                <input type="text" class="form-control" id="quiz_description" placeholder="Description">
+                <input type="text" class="form-control" id="new_quiz_description" placeholder="Description">
+                <button type="button" class="btn btn-primary" id="add_new_quiz" placeholder="Description" onclick="addNewQuiz()">Submit New Quiz</button>
             </div>
         </form>
-    </div></div>
+    </div>
 </div>
 <script src="js/quizDataRetrieval.js"></script>
 <script src="js/quizPageSetup.js"></script>

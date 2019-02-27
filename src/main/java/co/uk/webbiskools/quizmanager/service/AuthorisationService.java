@@ -29,11 +29,14 @@ public class AuthorisationService {
             preparedStatement.setString(2,password);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
-                return new Authorisation(Optional.of(resultSet.getInt("group_id")),AuthorisationToken.AUTHORISED);
+                return new Authorisation(
+                        Optional.of(resultSet.getInt("group_id")),
+                        Optional.of(resultSet.getInt("id")),
+                        AuthorisationToken.AUTHORISED);
             }
-            return new Authorisation(Optional.empty(),AuthorisationToken.INCORRECT_CREDENETIALS);
+            return new Authorisation(Optional.empty(),Optional.empty(),AuthorisationToken.INCORRECT_CREDENETIALS);
         } catch (SQLException e) {
-            return new Authorisation(Optional.empty(),AuthorisationToken.SERVICE_ERROR);
+            return new Authorisation(Optional.empty(),Optional.empty(),AuthorisationToken.SERVICE_ERROR);
         }
 
     }

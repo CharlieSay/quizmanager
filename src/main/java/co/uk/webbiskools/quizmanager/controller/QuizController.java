@@ -34,12 +34,21 @@ public class QuizController {
         return ResponseEntity.ok(gson.toJson(quizService.getAllQuiz()));
     }
 
-    @PostMapping(value = "/addQuestion")
+    @PostMapping(value = "/question/add")
     public ResponseEntity <HttpStatus> addNewQuestion(
             @RequestParam String question, @RequestParam String option1, @RequestParam String option2,
             @RequestParam String option3, @RequestParam(required = false) String option4,
             @RequestParam(required = false) String option5, @RequestParam String quizId) {
         if (quizService.addNewQuestion(question, quizId, option1, option2, option3, option4, option5)) {
+            return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        }
+        return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/add")
+    public ResponseEntity <HttpStatus> addNewQuiz(
+            @RequestParam String title, @RequestParam String description, @RequestParam String userId) {
+        if (quizService.addNewQuiz(title, description,userId)) {
             return ResponseEntity.ok(HttpStatus.ACCEPTED);
         }
         return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
@@ -64,6 +73,14 @@ public class QuizController {
     @DeleteMapping(value = "/question/option/delete")
     public ResponseEntity<HttpStatus> deleteOption(@RequestParam String optionId){
         if (quizService.deleteFrom("OptionBank",optionId)){
+            return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        }
+        return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/question/option/add")
+    public ResponseEntity<HttpStatus> addOption(@RequestParam String questionId, @RequestParam String optionText){
+        if (quizService.addNewOption(questionId,optionText)){
             return ResponseEntity.ok(HttpStatus.ACCEPTED);
         }
         return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
