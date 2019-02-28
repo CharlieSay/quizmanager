@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -29,16 +30,16 @@ public class QuizService {
             return preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     public Boolean addNewOption(String questionId, String optionText){
         String SQLStatement = "INSERT INTO OptionBank(option_text, question_id, correct_answer) VALUES (?,?,?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SQLStatement);
-            preparedStatement.setInt(2,Integer.parseInt(questionId));
             preparedStatement.setString(1,optionText);
+            preparedStatement.setInt(2,Integer.parseInt(questionId));
             preparedStatement.setBoolean(3,false);
             return preparedStatement.execute();
         } catch (SQLException e) {
@@ -61,7 +62,7 @@ public class QuizService {
         return false;
     }
 
-    public Boolean addNewQuestion(String question, String quizId, String... options){
+    public Boolean addNewQuestion(String question, String quizId, String correctOption, String... options){
         String SQLStatement = "INSERT INTO QuestionBank(question_text, quiz_id) VALUES (?,?)";
         try{
             PreparedStatement preparedStatement = connection.prepareStatement(SQLStatement, Statement.RETURN_GENERATED_KEYS);
@@ -73,18 +74,21 @@ public class QuizService {
             if (generatedKeys.next()){
                 resultingId = generatedKeys.getLong(1);
             }
-            for (String option : options){
-                if (option != null){
-                    addNewOption(option,resultingId);
+            for (int i=0; i<options.length;i++){
+                if (options[i] == options[Integer.parseInt(correctOption)-1]){
+                    addNewOptionFromQuestion(options[i],resultingId,true);
+                }else{
+                    addNewOptionFromQuestion(options[i],resultingId,false);
                 }
             }
         }catch(SQLException e){
             e.printStackTrace();
+            return false;
         }
         return true;
     }
 
-    private Boolean addNewOption(String option, long question_id_long){
+    private Boolean addNewOptionFromQuestion(String option, long question_id_long, Boolean correct_answer){
         Integer question_id = Integer.parseInt(Long.toString(question_id_long));
         String SQLStatement  ="INSERT INTO OptionBank(option_text, question_id, correct_answer) VALUES (?,?,?);" ;
 
@@ -92,15 +96,15 @@ public class QuizService {
             PreparedStatement preparedStatement = connection.prepareStatement(SQLStatement);
             preparedStatement.setString(1,option);
             preparedStatement.setInt(2,question_id);
-            preparedStatement.setBoolean(3,false);
+            preparedStatement.setBoolean(3,correct_answer);
             return preparedStatement.execute();
         }catch(SQLException e){
-e.printStackTrace();
+            e.printStackTrace();
         }
         return true;
     }
 
-    public List<Quiz> getAllQuiz(){
+    public Optional<List<Quiz>> getAllQuiz(){
         List<Quiz> quizList = new ArrayList<>();
 
         String SQLStatement = "select * from QuizBank";
@@ -112,14 +116,15 @@ e.printStackTrace();
                 quizList.add(new Quiz(resultSet.getInt(1),
                         resultSet.getString(2)));
             }
+            return Optional.of(quizList);
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return quizList;
+        return Optional.empty();
     }
 
 
-    public Quiz getQuizById(Integer quizId){
+    public Optional<Quiz> getQuizById(Integer quizId){
         Quiz quiz = null;
 
         String SQLStatment = "select * from `QuizBank` WHERE id=?";
@@ -139,14 +144,14 @@ e.printStackTrace();
                 );
                 quiz.setQuestionList(getQuestionList(quiz.getId()));
             }
-            return quiz;
+            return Optional.of(quiz);
         }catch (SQLException e){
-            return null;
+            return Optional.empty();
         }
     }
 
 
-    private Integer getAmountOfQuestions(Integer quizId){
+    public Integer getAmountOfQuestions(Integer quizId){
         String sql = "SELECT count(quiz_id) FROM QuestionBank WHERE quiz_id = ?";
 
         try{
@@ -162,7 +167,7 @@ e.printStackTrace();
         }
     }
 
-    private List<Question> getQuestionList(Integer quizId){
+    public List<Question> getQuestionList(Integer quizId){
         String statement = "SELECT * FROM `QuestionBank` WHERE quiz_id=?";
         List<Question> questionList = new ArrayList<>();
         try {
@@ -183,7 +188,7 @@ e.printStackTrace();
         return questionList;
     }
 
-    private List<Option> getOptionList(Integer questionId){
+    public List<Option> getOptionList(Integer questionId){
         String statement = "select * FROM `OptionBank` WHERE question_id=?";
         List<Option> optionList = new ArrayList<>();
         try {

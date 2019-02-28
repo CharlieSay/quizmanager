@@ -1,11 +1,12 @@
 function userNameCheck(window) {
 
     if (window.sessionStorage.length == 0) {
-        alert('No user detected, please log-in.')
+        alert('No user detected, please log-in.');
         window.location = '/'
     } else {
         setUpPageForUser(window.sessionStorage.getItem('group'));
         document.getElementById('wrapper fadeInDown').hidden = false;
+        listener();
     }
 }
 
@@ -23,7 +24,7 @@ function setUpPageForUser(groupId) {
         document.getElementById('newQuestionButton').hidden = true;
         document.getElementById('userIdentifier').innerText = 'Restricted User';
     } else {
-        alert('Something went wrong');
+        bootbox.alert('Something went wrong');
     }
 }
 

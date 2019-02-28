@@ -1,3 +1,5 @@
+let updateContent;
+
 function getData(quizId) {
     document.getElementById('new_quiz_form').hidden = true;
     document.getElementById('create_new').hidden = true;
@@ -6,11 +8,11 @@ function getData(quizId) {
         .then(response => {
             if (response.ok) {
                 response.json().then(body => {
-                    loadJsonData(body);
+                    loadJsonData(body.value);
                     window.sessionStorage.setItem('quizId', quizId);
                 })
             } else {
-                alert('Issue With Retrieving QuizDataRetrieval. Most Likely doesnt exist.');
+                bootbox.alert('Issue With Retrieving QuizDataRetrieval. Most Likely doesnt exist.');
             }
         })
 }
@@ -31,33 +33,30 @@ function populateOptions(question) {
     let amountOfQuestions = question.optionList.length;
     let requiredOptions = ' <ul class="list-group" name="option">';
     for (let i = 0; i < amountOfQuestions; i++) {
-        requiredOptions += question.optionList[i].optionText;
+            requiredOptions += question.optionList[i].optionText;
     }
     requiredOptions += '</ul>';
     return requiredOptions;
 }
 
 function editableView(){
-    populateQuestions();
+    let elementsByName = document.getElementsByName('option');
+
+    for (let i = 0; i<elementsByName.length; i++){
+        if (elementsByName[i].getAttribute('contenteditable') === 'true'){
+            elementsByName[i].setAttribute('contenteditable','false');
+            if (i == 0){
+                bootbox.alert('NOW IN NORMAL VIEW \n You can no longer directly edit text');
+            }
+        }else {
+            elementsByName[i].setAttribute('contenteditable', 'true');
+            if (i == 0) {
+                bootbox.alert('NOW IN EDIT VIEW \n All Question Text & Option Text are now editable by clicking on the text and changing it.');
+            }
+        }
+    }
+
 }
-
-//
-// function optionVerifier(boolean) {
-//     let elementsByName = document.getElementsByName('option');
-//     for (let x = 0; x < elementsByName.length; x++) {
-//         let item = elementsByName[x];
-//         item.hidden = boolean;
-//     }
-// }
-//
-// function options() {
-//     if (document.getElementsByName('option')[0].hidden.valueOf()) {
-//         optionVerifier(false);
-//     } else {
-//         optionVerifier(true);
-//     }
-// }
-
 
 function populateQuestions(quiz) {
     let length = quiz._questionList.length;
@@ -80,7 +79,7 @@ function populateQuestions(quiz) {
         } else {
             questionHTML += '<div class="row"><div class="col"<li class="list-group-item"><h4>Question ' +
                 (i + 1) + '</h4>' + quiz._questionList[i].questionText +
-                '</div><div class="row"></div></li>'
+                '</div><div class="row"></div></div></li>'
         }
         requiredHTML += questionHTML;
         requiredHTML += populateOptions(quiz._questionList[i]);
@@ -180,13 +179,14 @@ class Option {
     get optionText() {
         if (window.sessionStorage.getItem('group') == 1){
             if (this._correctAnswer) {
-                return '<li class="list-group-item list-group-item-action list-group-item-success" id="optionId'+this._optionId+'" name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<button class="btn btn-link" onclick="deleteOption('+this._optionId+')">Delete Option</button></li>';
+                return '<li class="list-group-item list-group-item-action list-group-item-success" name="option" id="optionId'+this._optionId+'">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<button class="btn btn-link" onclick="deleteOption('+this._optionId+')">Delete Option</button></li>';
+
             } else {
                 return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<button class="btn btn-link" onclick="deleteOption('+this._optionId+')">Delete Option</button></li>';
             }
-        }else if(window.sessionStorage.getItem('group')==2){
+        }else if(window.sessionStorage.getItem('group') == 2){
             if (this._correctAnswer) {
-                return '<li class="list-group-item list-group-item-action list-group-item-success" name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '</li>';
+                return '<li class="list-group-item list-group-item-action list-group-item-success" name="option" id="optionId'+this._optionId+'">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '</li>';
             } else {
                 return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '</li>';
             }
@@ -209,5 +209,8 @@ function numberToCharacter(number) {
     } else if (number == 4) {
         return 'E'
     }
+
+}
+function listener(){
 
 }

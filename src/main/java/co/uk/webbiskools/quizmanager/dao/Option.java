@@ -32,7 +32,7 @@ public class Option {
 
     @Override
     public String toString() {
-        return "Option{" +
+         return "Option{" +
                 "id=" + id +
                 ", optionText='" + optionText + '\'' +
                 ", questionId=" + questionId +
