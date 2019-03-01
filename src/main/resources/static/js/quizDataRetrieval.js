@@ -1,5 +1,3 @@
-let updateContent;
-
 function getData(quizId) {
     document.getElementById('new_quiz_form').hidden = true;
     document.getElementById('create_new').hidden = true;
@@ -19,7 +17,8 @@ function getData(quizId) {
 
 function loadJsonData(body) {
     let jsonObject = body;
-    let newQuiz = new QuizDataRetrieval(jsonObject.id, jsonObject.title, jsonObject.description, jsonObject.creationDate, jsonObject.creatorId, jsonObject.amountOfQuestions, jsonObject.questionList);
+    let newQuiz = new QuizDataRetrieval(jsonObject.id, jsonObject.title, jsonObject.description, jsonObject.creationDate,
+        jsonObject.creatorId, jsonObject.amountOfQuestions, jsonObject.questionList);
     document.getElementById('titleText').innerText = newQuiz.title;
     document.getElementById('descText').innerText = newQuiz.description;
     document.getElementById('creationText').innerText = newQuiz.creationDate;
@@ -209,8 +208,5 @@ function numberToCharacter(number) {
     } else if (number == 4) {
         return 'E'
     }
-
-}
-function listener(){
 
 }

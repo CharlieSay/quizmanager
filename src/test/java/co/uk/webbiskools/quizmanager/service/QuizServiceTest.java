@@ -7,13 +7,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class QuizServiceTest{
@@ -121,33 +121,70 @@ public class QuizServiceTest{
         assertFalse(aBoolean);
     }
 
-//    @Test
-//    public void should_AddNewQuestion_WhenQuestionQuizIdCorrectOptionOptionsAreValid() throws Exception {
-//        String SQLStatement = "INSERT INTO QuestionBank(question_text, quiz_id) VALUES (?,?)";
-//        String questionTitle = "QuestionTitle";
-//        String quizId = "1";
-//        String[] options = {"options1","options2"};
-//        ResultSet resultSet = mock(ResultSet.class);
-//
-//        when(connection.prepareStatement(SQLStatement, Statement.RETURN_GENERATED_KEYS)).thenReturn(preparedStatement);
-//        doNothing().when(preparedStatement).setString(1,questionTitle);
-//        doNothing().when(preparedStatement).setString(2,quizId);
-//        when(preparedStatement.execute()).thenReturn(true);
-//        when(preparedStatement.getGeneratedKeys()).thenReturn(resultSet);
-//        when(resultSet.next()).thenReturn(true);
-//        when(resultSet.getLong(1)).thenReturn(1L);
-//
-//
-//        Boolean result = Whitebox.invokeMethod(quizService, "addNewOptionFromQuestion", "Arg",1l,true);
-//        quizService.addNewQuestion(questionTitle,quizId,"1",options);
-//    }
-
     @Test
     public void should_NotAddQuestion_WhenSQLError() throws SQLException {
         String SQLStatement = "INSERT INTO QuestionBank(question_text, quiz_id) VALUES (?,?)";
-        when(connection.prepareStatement(SQLStatement, Statement.RETURN_GENERATED_KEYS)).thenThrow(SQLException.class);
+        when(connection.prepareStatement(SQLStatement, Statement.RETURN_GENERATED_KEYS)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setString(1,SQLStatement);
+        doNothing().when(preparedStatement).setString(2,"SQLError");
+        when(preparedStatement.execute()).thenThrow(SQLException.class);
 
         Boolean aBoolean = quizService.addNewQuestion("SQLError", "SQLError","noErorr","corectError");
+
+        assertFalse(aBoolean);
+    }
+
+    @Test
+    public void should_AddQuestion_WhenNoError() throws SQLException {
+        String SQLStatement = "INSERT INTO QuestionBank(question_text, quiz_id) VALUES (?,?)";
+        String question = "My Question?";
+        String quizId = "1";
+        String correctOption = "1";
+        String[] optionsList = {"1","2"};
+        Integer long1l = Integer.parseInt(Long.toString(1l));
+        String addNewOptionQuestionSQL  ="INSERT INTO OptionBank(option_text, question_id, correct_answer) VALUES (?,?,?);" ;
+        when(connection.prepareStatement(SQLStatement, Statement.RETURN_GENERATED_KEYS)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setString(1,question);
+        doNothing().when(preparedStatement).setString(2,quizId);
+        when(preparedStatement.execute()).thenReturn(true);
+        when(preparedStatement.getGeneratedKeys()).thenReturn(resultSet);
+        doReturn(true).when(resultSet).next();
+        when(resultSet.getLong(1)).thenReturn(1L);
+        when(connection.prepareStatement(addNewOptionQuestionSQL)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setString(1,"1");
+        doNothing().when(preparedStatement).setInt(2,long1l);
+        doNothing().when(preparedStatement).setBoolean(3,true);
+        when(preparedStatement.execute()).thenReturn(true);
+
+        Boolean aBoolean = quizService.addNewQuestion(question, quizId, correctOption, optionsList);
+
+        assertTrue(aBoolean);
+    }
+
+
+    @Test
+    public void shouldReturnFalse_AddQuestion_WhenNoError() throws SQLException {
+        String SQLStatement = "INSERT INTO QuestionBank(question_text, quiz_id) VALUES (?,?)";
+        String question = "My Question?";
+        String quizId = "1";
+        String correctOption = "1";
+        String[] optionsList = {"1","2"};
+        Integer long1l = Integer.parseInt(Long.toString(1l));
+        String addNewOptionQuestionSQL  ="INSERT INTO OptionBank(option_text, question_id, correct_answer) VALUES (?,?,?);" ;
+        when(connection.prepareStatement(SQLStatement, Statement.RETURN_GENERATED_KEYS)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setString(1,question);
+        doNothing().when(preparedStatement).setString(2,quizId);
+        when(preparedStatement.execute()).thenReturn(true);
+        when(preparedStatement.getGeneratedKeys()).thenReturn(resultSet);
+        doReturn(true).when(resultSet).next();
+        when(resultSet.getLong(1)).thenReturn(1L);
+        when(connection.prepareStatement(addNewOptionQuestionSQL)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setString(1,"1");
+        doNothing().when(preparedStatement).setInt(2,long1l);
+        doNothing().when(preparedStatement).setBoolean(3,true);
+        when(preparedStatement.execute()).thenThrow(SQLException.class);
+
+        Boolean aBoolean = quizService.addNewQuestion(question, quizId, correctOption, optionsList);
 
         assertFalse(aBoolean);
     }
@@ -179,46 +216,160 @@ public class QuizServiceTest{
         assertFalse(allQuiz.isPresent());
     }
 
-//    @Test
-//    public void should_ReturnLoadedOptional_WhenGettingQuizByValidId() throws Exception {
-//        String SQLStatment = "select * from `QuizBank` WHERE id=?";
-//        Integer quizId = 1;
-//        List<Question> questionList = new ArrayList();
-//        questionList.add(new Question(1,"question",1,null));
-//        when(connection.prepareStatement(SQLStatment)).thenReturn(preparedStatement);
-//        doNothing().when(preparedStatement).setInt(1,quizId);
-//        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-//        doReturn(true).doReturn(false).when(resultSet).next();
-//        when(resultSet.getInt(1)).thenReturn(1);
-//        when(resultSet.getInt(1)).thenReturn(1);PRIMARY
-//        when(resultSet.getString(2)).thenReturn("QuizTitle");
-//        when(resultSet.getString(3)).thenReturn("Description");
-//        when(resultSet.getDate(4)).thenReturn(null);
-//        when(resultSet.getInt(5)).thenReturn(4);
-//        doNothing().when(preparedStatement).setInt(1,quizId);
-//        when(quizService.getAmountOfQuestions(quizId)).thenReturn(1);
-//        when(quizService.getQuestionList(quizId)).thenReturn(questionList);
-//
-//        Optional<Quiz> quizById = quizService.getQuizById(quizId);
-//
-//        assertTrue(quizById.isPresent());
-//    }
-
     @Test
-    public void should_GetOptionList_WhenQuestionIdIsValid() throws SQLException {
-        String statement = "select * FROM `OptionBank` WHERE question_id=?";
-        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setInt(1,any());
+    public void should_GetAmountOfQuestions_WhenQuestionsExist() throws SQLException {
+        String sql = "SELECT count(quiz_id) FROM QuestionBank WHERE quiz_id = ?";
+        Integer quizId = 1;
+        when(connection.prepareStatement(sql)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,quizId);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         doReturn(true).doReturn(false).when(resultSet).next();
         when(resultSet.getInt(1)).thenReturn(1);
-        when(resultSet.getString(2)).thenReturn("OptionTitle");
-        when(resultSet.getInt(3)).thenReturn(11);
+
+        Integer amountOfQuestions = quizService.getAmountOfQuestions(1);
+
+       assertEquals(Optional.of(1).get(),amountOfQuestions);
+    }
+
+    @Test
+    public void should_Return0AmountOfQuestions_WhenNoQuestionsExist() throws SQLException {
+        String sql = "SELECT count(quiz_id) FROM QuestionBank WHERE quiz_id = ?";
+        Integer quizId = 0;
+        when(connection.prepareStatement(sql)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,quizId);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doReturn(false).when(resultSet).next();
+        when(resultSet.getInt(1)).thenReturn(0);
+
+        Integer amountOfQuestions = quizService.getAmountOfQuestions(1);
+
+        assertEquals(Optional.of(0).get(),amountOfQuestions);
+    }
+
+    @Test
+    public void should_Return0AmountOfQuestions_WhenSQLError() throws SQLException {
+        String sql = "SELECT count(quiz_id) FROM QuestionBank WHERE quiz_id = ?";
+
+        when(connection.prepareStatement(sql)).thenThrow(SQLException.class);
+
+        Integer amountOfQuestions = quizService.getAmountOfQuestions(1);
+
+        assertEquals(Optional.of(0).get(),amountOfQuestions);
+    }
+
+
+    @Test
+    public void should_GetOptionList_WhenValid() throws SQLException {
+        String statement = "select * FROM `OptionBank` WHERE question_id=?";
+
+        when(connection.prepareStatement(statement)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,1);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doReturn(true).doReturn(false).when(resultSet).next();
+        when(resultSet.getInt(1)).thenReturn(1);
+        when(resultSet.getString(2)).thenReturn("String");
+        when(resultSet.getInt(3)).thenReturn(1);
         when(resultSet.getBoolean(4)).thenReturn(true);
 
         List<Option> optionList = quizService.getOptionList(1);
 
-        assertNotNull(optionList);
+        assertThat(optionList.size(),is(1));
     }
 
+    @Test
+    public void shouldNotThenThrowSQLError_GetOptionList_WhenValid() throws SQLException {
+        String statement = "select * FROM `OptionBank` WHERE question_id=?";
+
+        when(connection.prepareStatement(statement)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,23123121);
+        when(preparedStatement.executeQuery()).thenThrow(SQLException.class);
+
+        List<Option> optionList = quizService.getOptionList(23123121);
+
+        assertThat(optionList.size(),is(0));
+    }
+
+    @Test
+    public void shouldGetQuestionList_WhenValidQuizId() throws SQLException {
+        String statement = "SELECT * FROM `QuestionBank` WHERE quiz_id=?";
+        Integer quizId = 10;
+
+        when(connection.prepareStatement(statement)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,quizId);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doReturn(true).doReturn(false).when(resultSet).next();
+        when(resultSet.getInt(1)).thenReturn(1);
+        when(resultSet.getString(2)).thenReturn("Im A String    ");
+        when(resultSet.getInt(3)).thenReturn(3);
+
+        String secondStatement = "select * FROM `OptionBank` WHERE question_id=?";
+
+        when(connection.prepareStatement(secondStatement)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,1);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doReturn(true).doReturn(false).when(resultSet).next();
+        when(resultSet.getInt(1)).thenReturn(1);
+        when(resultSet.getString(2)).thenReturn("String");
+        when(resultSet.getInt(3)).thenReturn(1);
+        when(resultSet.getBoolean(4)).thenReturn(true);
+
+        List<Question> questionList = quizService.getQuestionList(1);
+
+        assertThat(questionList.size(),is(1));
+    }
+
+    @Test
+    public void shouldNotGetQuestionList_WhenInvalidQuizId() throws SQLException {
+        String statement = "SELECT * FROM `QuestionBank` WHERE quiz_id=?";
+        when(connection.prepareStatement(statement)).thenThrow(SQLException.class);
+
+        List<Question> questionList = quizService.getQuestionList(1);
+
+        assertThat(questionList.size(),is(0));
+    }
+
+    @Test
+    public void should_ReturnOptionalWithQuiz_WhenQuizIdIsValid() throws SQLException {
+        String SQLStatement = "select * from `QuizBank` WHERE id=?";
+        Integer quizId = 1;
+        when(connection.prepareStatement(SQLStatement)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,quizId);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doReturn(true).doReturn(false).when(resultSet).next();
+        when(resultSet.getInt(1)).thenReturn(1);
+        when(resultSet.getString(2)).thenReturn("index2");
+        when(resultSet.getString(3)).thenReturn("index3");
+        when(resultSet.getDate(4)).thenReturn(Date.valueOf("1996-08-24"));
+        when(resultSet.getInt(5)).thenReturn(5);
+
+        String firstSQL = "SELECT count(quiz_id) FROM QuestionBank WHERE quiz_id = ?";
+        when(connection.prepareStatement(firstSQL)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,quizId);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doReturn(true).doReturn(false).when(resultSet).next();
+        when(resultSet.getInt(1)).thenReturn(1);
+
+        String secondSQL = "SELECT * FROM `QuestionBank` WHERE quiz_id=?";
+        when(connection.prepareStatement(secondSQL)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,quizId);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doReturn(true).doReturn(false).when(resultSet).next();
+        when(resultSet.getInt(1)).thenReturn(1);
+        when(resultSet.getString(2)).thenReturn("Im A String    ");
+        when(resultSet.getInt(3)).thenReturn(3);
+
+        String thirdSQL = "select * FROM `OptionBank` WHERE question_id=?";
+        when(connection.prepareStatement(thirdSQL)).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,1);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doReturn(true).doReturn(false).when(resultSet).next();
+        when(resultSet.getInt(1)).thenReturn(1);
+        when(resultSet.getString(2)).thenReturn("String");
+        when(resultSet.getInt(3)).thenReturn(1);
+        when(resultSet.getBoolean(4)).thenReturn(true);
+
+        Optional<Quiz> quizById = quizService.getQuizById(1);
+
+        assertTrue(quizById.isPresent());
+    }
 }

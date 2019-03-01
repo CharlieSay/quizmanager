@@ -1,12 +1,10 @@
 function userNameCheck(window) {
-
     if (window.sessionStorage.length == 0) {
         alert('No user detected, please log-in.');
         window.location = '/'
     } else {
         setUpPageForUser(window.sessionStorage.getItem('group'));
         document.getElementById('wrapper fadeInDown').hidden = false;
-        listener();
     }
 }
 

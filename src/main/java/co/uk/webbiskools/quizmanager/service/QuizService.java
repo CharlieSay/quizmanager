@@ -100,8 +100,8 @@ public class QuizService {
             return preparedStatement.execute();
         }catch(SQLException e){
             e.printStackTrace();
+            return false;
         }
-        return true;
     }
 
     public Optional<List<Quiz>> getAllQuiz(){
