@@ -178,14 +178,19 @@ class Option {
     get optionText() {
         if (window.sessionStorage.getItem('group') == 1){
             if (this._correctAnswer) {
-                return '<li class="list-group-item list-group-item-action list-group-item-success" name="option" id="optionId'+this._optionId+'">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<button class="btn btn-link" onclick="deleteOption('+this._optionId+')">Delete Option</button></li>';
+                return '<li class="list-group-item list-group-item-action list-group-item-success" name="option" id="optionId'+this._optionId+'">'
+                    + numberToCharacter(this._optionNumber) + ': ' + this._optionText +
+                    '<button class="btn btn-link" onclick="deleteOption('+this._optionId+')">Delete Option</button></li>';
 
             } else {
-                return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '<button class="btn btn-link" onclick="deleteOption('+this._optionId+')">Delete Option</button></li>';
+                return '<li class="list-group-item"  name="option">'
+                    + numberToCharacter(this._optionNumber) + ': ' + this._optionText +
+                    '<button class="btn btn-link" onclick="deleteOption('+this._optionId+')">Delete Option</button></li>';
             }
         }else if(window.sessionStorage.getItem('group') == 2){
             if (this._correctAnswer) {
-                return '<li class="list-group-item list-group-item-action list-group-item-success" name="option" id="optionId'+this._optionId+'">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '</li>';
+                return '<li class="list-group-item list-group-item-action list-group-item-success" name="option" id="optionId'+this._optionId+'">'
+                    + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '</li>';
             } else {
                 return '<li class="list-group-item"  name="option">' + numberToCharacter(this._optionNumber) + ': ' + this._optionText + '</li>';
             }

@@ -31,16 +31,13 @@ function addNewQuiz(){
 
 function submitNewQuestion() {
     let question = document.getElementById('questionTitle').value;
-    if (!new RegExp('\\?$').test(question)){
-        question += '?';
-    }
+    if (!new RegExp('\\?$').test(question)){question += '?';}
     let option1 = document.getElementById('Option1Input').value;
     let option2 = document.getElementById('Option2Input').value;
     let option3 = document.getElementById('Option3Input').value;
     let option4 = document.getElementById('Option4Input').value;
     let option5 = document.getElementById('Option5Input').value;
     let correctOption = document.getElementById('CorrectOption').value;
-
     let url = 'http://localhost:8080/quiz/question/add?' +
         'question=' + question +
         '&quizId=' + window.sessionStorage.getItem('quizId') +
@@ -48,25 +45,20 @@ function submitNewQuestion() {
         '&option1=' + option1 +
         '&option2=' + option2 +
         '&option3=' + option3;
-
     if (!option1 || !option2 || !option3){
         bootbox.alert('Please have ATLEAST three options');
         return true;
     }
-
     if (correctOption === 'nil'){
         bootbox.alert('Please Select Correct Answer');
         return true;
     }
-
     if (option4){
         url += '&option4=' + option4;
     }
-
     if (option5){
         url += '&option5=' + option5;
     }
-
     postRequest(url);
 
     document.getElementById('newQuestionForm').hidden = true;
