@@ -1,4 +1,5 @@
 function authenticateUser(username, password) {
+    document.getElementById('error-panel').hidden = true;
     if (username.value.length > 1 || password.value.length > 1) {
         let url = window.location.href + '/authorisation?username=' + username.value + '&password=' + password.value;
         fetch(url)
